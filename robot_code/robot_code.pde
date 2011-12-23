@@ -147,7 +147,7 @@ boolean receiveData()
   return true;
 }
 
-boolean get_data_from_nunchuck()
+/*boolean get_data_from_nunchuck()
 {
   int jx, jy, ax, ay, az, bz, bc;
   if(nunchuk_read(&jx, &jy, &ax, &ay, &az, &bz, &bc))
@@ -176,7 +176,7 @@ boolean get_data_from_nunchuck()
   } else {
     return false;
   }
-}
+}*/
 
 boolean motor_set_speed(int motor, int value) {
   
@@ -279,7 +279,7 @@ void loop()
     readSerial();
   }
   
-  delay(50);
+  delay(10);
 
   
 }
