@@ -3,7 +3,7 @@
 #include <Wire.h> // This seems redundant, but we need to declare this
                   // dependency in the pde file or else it won't be included
                   // in the build.
-#include "nunchuk.h"
+//#include "nunchuk.h"
 
 int inPin = 4;
 int inputDelay = 10;
@@ -21,7 +21,7 @@ void setup()
   pinMode(inPin, INPUT);
   pinMode(12, INPUT);  
   
-  nunchuk_init();
+  //nunchuk_init();
 }
 
 /*int readBit(boolean noDelay = false)
@@ -271,16 +271,9 @@ void loop()
     //}
   }*/
   
-  if (get_data_from_nunchuck()) {
-    /*Serial.print(velocity);
-    Serial.print(" | ");
-    Serial.print(angle);
-    Serial.print(" | ");
-    Serial.print(servo);
-    Serial.print("\r\n");*/
-    
+  /*if (get_data_from_nunchuck()) {
     motor_control(velocity, angle);
-  }
+  }*/
   
   if (Serial.available()) {
     readSerial();
