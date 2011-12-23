@@ -16,7 +16,7 @@ char* error;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(2400);
   
   pinMode(inPin, INPUT);
   pinMode(12, INPUT);  
@@ -249,6 +249,11 @@ void motor_control(int velocity, int angle) {
   motor_set_speed(2, motorRightSpeed);
 }
 
+void readSerial() {
+  char val = Serial.read();
+  Serial.print(val);
+}
+
 void loop()
 {
   /*if (receiveData())
@@ -277,7 +282,11 @@ void loop()
     motor_control(velocity, angle);
   }
   
-  delay(500);
+  if (Serial.available()) {
+    readSerial();
+  }
+  
+  delay(50);
 
   
 }
