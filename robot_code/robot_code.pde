@@ -206,10 +206,10 @@ boolean motor_set_speed(int motor, int value) {
     analogWrite(pinBwd, 0);
   }
   
-  Serial.print(motor);
+  /*Serial.print(motor);
   Serial.print(" | ");
   Serial.print(value);
-  Serial.print("\r\n");
+  Serial.print("\r\n");*/
 }
 
 void motor_control(int velocity, int angle) {
@@ -249,9 +249,69 @@ void motor_control(int velocity, int angle) {
   motor_set_speed(2, motorRightSpeed);
 }
 
-void readSerial() {
+int currently_reading = 0;
+int velocityRead = 0;
+int velocityReadSign = 1;
+int angleRead = 0;
+int angleReadSign = 1;
+int servoRead = 0;
+int servoReadSign = 1;
+
+boolean readSerial() {
   char val = Serial.read();
-  Serial.print(val);
+  
+  if (val == '^') {
+    currently_reading = 1;
+    
+    velocityRead = 0;
+    velocityReadSign = 1;
+    angleRead = 0;
+    angleReadSign = 1;
+    servoRead = 0;
+    servoReadSign = 1;
+    
+    return true;
+  }
+  
+  if (val == '$') {
+    currently_reading = 0;
+    
+    velocityRead = velocityReadSign * velocityRead;
+    angleRead = angleReadSign * angleRead;
+    servoRead = servoReadSign * servoRead;
+    
+    motor_control(velocityRead, angleRead);
+    //Serial.println(velocityRead);
+    //Serial.println(angleRead);
+    return true;
+  }
+  
+  if (val == '|') {
+    currently_reading++;
+    return true;
+  }
+ 
+  if (currently_reading == 1) {
+    if (val == '-') {
+      velocityReadSign = -1;
+    } else {
+      velocityRead = (velocityRead * 10) + ((int)val - 48);
+    }
+  } else if (currently_reading == 2) {
+    if (val == '-') {
+      angleReadSign = -1;
+    } else {
+      angleRead = (angleRead * 10) + ((int)val - 48);
+    }
+  } else if (currently_reading == 3) {
+    if (val == '-') {
+      servoReadSign = -1;
+    } else {
+      servoRead = (servoRead * 10) + ((int)val - 48);
+    }
+  }
+  
+  
 }
 
 void loop()
