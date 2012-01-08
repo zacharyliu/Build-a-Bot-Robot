@@ -124,8 +124,10 @@ void servo_control(int servo) {
   
   if (servo == 1) {
     control = servoDirection * servoSpeed;
-  } else {
+  } else if (servo == -1) {
     control = servoDirection * servoSpeed * (-1);
+  } else {
+	control = 0;
   }
   
   if (servoPosition + control > servoMin && servoPosition + control < servoMax) {
