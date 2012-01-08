@@ -23,7 +23,6 @@ void setup()
 {
   Serial.begin(2400);
   
-  pinMode(inPin, INPUT);
   pinMode(12, INPUT);  
   
   theServo.attach(servoPin);
