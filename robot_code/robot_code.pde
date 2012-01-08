@@ -3,10 +3,8 @@
 #include <Wire.h>
 #include <Servo.h>
 
-int inPin = 4;
-
 Servo theServo;
-int servoPin = 3;
+int servoPin = 4;
 int servoMin = 0;
 int servoMax = 180;
 int servoPosition = servoMin;
@@ -59,8 +57,8 @@ boolean motor_set_speed(int motor, int value) {
     pinFwd = 5;
     pinBwd = 6;
   } else if (motor == 2) {
-    pinFwd = 9;
-    pinBwd = 10;
+    pinFwd = 3;  
+    pinBwd = 11;
   } else {
     return false;
   }
