@@ -4,8 +4,18 @@
                   // dependency in the pde file or else it won't be included
                   // in the build.
 //#include "nunchuk.h"
+#include <Servo.h>
 
 int inPin = 4;
+
+Servo theServo;
+int servoPin = 3;
+int servoMin = 0;
+int servoMax = 180;
+int servoPosition = servoMin;
+int servoSpeed = 1;
+int servoDirection = 1;
+
 int inputDelay = 10;
 
 int velocity;
@@ -20,6 +30,9 @@ void setup()
   
   pinMode(inPin, INPUT);
   pinMode(12, INPUT);  
+  
+  theServo.attach(servoPin);
+  theServo.write(servoPosition);
   
   //nunchuk_init();
 }
@@ -249,6 +262,23 @@ void motor_control(int velocity, int angle) {
   motor_set_speed(2, motorRightSpeed);
 }
 
+void servo_control(int servo) {
+  int control;
+  
+  if (servo == 1) {
+    control = servoDirection * servoSpeed;
+  } else {
+    control = servoDirection * servoSpeed * (-1);
+  }
+  
+  if (servoPosition + control > servoMin && servoPosition + control < servoMax) {
+    servoPosition = servoPosition + control;
+  }
+  
+  theServo.write(servoPosition);
+    
+}
+
 int currently_reading = 0;
 int velocityRead = 0;
 int velocityReadSign = 1;
@@ -281,6 +311,8 @@ boolean readSerial() {
     servoRead = servoReadSign * servoRead;
     
     motor_control(velocityRead, angleRead);
+    
+    servo_control(servoRead);
     //Serial.println(velocityRead);
     //Serial.println(angleRead);
     return true;
