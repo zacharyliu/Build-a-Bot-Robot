@@ -1,9 +1,6 @@
 #include <string.h>
 #include <stdio.h>
-#include <Wire.h> // This seems redundant, but we need to declare this
-                  // dependency in the pde file or else it won't be included
-                  // in the build.
-//#include "nunchuk.h"
+#include <Wire.h>
 #include <Servo.h>
 
 int inPin = 4;
@@ -33,18 +30,7 @@ void setup()
   
   theServo.attach(servoPin);
   theServo.write(servoPosition);
-  
-  //nunchuk_init();
 }
-
-/*int readBit(boolean noDelay = false)
-{
-  if (!noDelay)
-  {
-    delay(inputDelay);
-  }
-  return digitalRead(inPin);
-}*/
 
 int readBit(boolean noDelay = false)
 {
@@ -61,135 +47,6 @@ int readBit(boolean noDelay = false)
     return LOW;
   }
 }
-
-boolean receiveData()
-{
-  // wait for first bit
-  if (readBit() != HIGH)
-  {
-    error = "initial";
-    return false;
-  }
-  
-  // look for 5 zeros, else exit
-  int counter = 0;
-  while (readBit() == LOW && counter < 5)
-  {
-    counter++;
-  }
-  if (counter != 5)
-  {
-    error = "counter";
-    return false;
-  }
-  
-  // check for a space
-  /*if (readBit() != HIGH)
-  {
-    error = "space1";
-    return false;
-  }*/
-  readBit();
-  
-  // get the velocity
-  int velocitySign;
-  if (readBit() == HIGH)
-  {
-    velocitySign = 1;
-  }
-  else
-  {
-    velocitySign = -1;
-  }
-  velocity = 0;
-  for (int i=0; i<3; i++)
-  {
-    velocity = (velocity * 2) + readBit();
-  }
-  velocity = velocitySign * velocity;
-  
-  // check for a space
-  /*if (readBit() != HIGH)
-  {
-    error = "space2";
-    return false;
-  }*/
-  readBit();
-  
-  // get the angle
-  int angleSign;
-  if (readBit() == HIGH)
-  {
-    angleSign = 1;
-  }
-  else
-  {
-    angleSign = -1;
-  }
-  angle = 0;
-  for (int i=0; i<3; i++)
-  {
-    angle = (angle * 2) + readBit();
-  }
-  angle = angleSign * angle;
-  
-  // check for a space
-  /*if (readBit() != HIGH)
-  {
-    error = "space3";
-    return false;
-  }*/
-  readBit();
-  
-  // get the servo command
-  servo = readBit();
-  
-  // check for a space
-  /*if (readBit() != HIGH)
-  {
-    error = "space4";
-    return false;
-  }*/
-  readBit();
-  
-  // read the checksum (not yet implemented)
-  //readBit();
-  //readBit();
-  
-  // data read was successful
-  return true;
-}
-
-/*boolean get_data_from_nunchuck()
-{
-  int jx, jy, ax, ay, az, bz, bc;
-  if(nunchuk_read(&jx, &jy, &ax, &ay, &az, &bz, &bc))
-  {
-    if (jy > 8 || jy < -8) {
-      velocity = jy;
-    } else {
-      velocity = 0;
-    }
-    
-    if (jx > 8 || jx < -8) {
-      angle = jx;
-    } else {
-      angle = 0;
-    }
-    
-    if (bc == 1) {
-      servo = 1;
-    } else if (bz == 1) {
-      servo = -1;
-    } else {
-      servo = 0;
-    }
-    
-    return true;
-  } else {
-    return false;
-  }
-}*/
 
 boolean motor_set_speed(int motor, int value) {
   
@@ -313,8 +170,6 @@ boolean readSerial() {
     motor_control(velocityRead, angleRead);
     
     servo_control(servoRead);
-    //Serial.println(velocityRead);
-    //Serial.println(angleRead);
     return true;
   }
   
@@ -347,31 +202,10 @@ boolean readSerial() {
 }
 
 void loop()
-{
-  /*if (receiveData())
-  {
-    Serial.println("data received successfully");
-    Serial.println(velocity);
-    Serial.println(angle);
-    Serial.println(servo);
-  }
-  else
-  {
-    //if (error != "initial")
-    //{
-      Serial.println(error);
-    //}
-  }*/
-  
-  /*if (get_data_from_nunchuck()) {
-    motor_control(velocity, angle);
-  }*/
-  
+{  
   if (Serial.available()) {
     readSerial();
   }
   
   delay(10);
-
-  
 }
