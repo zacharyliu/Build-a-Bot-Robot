@@ -1,6 +1,3 @@
-#########################################################################
-######### For Arduino 0023 - Not Compatible with Arduino 1.0 ############
-#########################################################################
 
 #include <string.h>
 #include <stdio.h>
@@ -10,9 +7,9 @@
 Servo theServo;
 int servoPin = 4;
 int servoMin = 0;
-int servoMax = 180;
-int servoPosition = servoMin;
-int servoSpeed = 1;
+int servoMax = 360;
+int servoPosition = 0;
+int servoSpeed = 2;
 int servoDirection = 1;
 
 int inputDelay = 10;
@@ -124,15 +121,23 @@ void servo_control(int servo) {
   int control;
   
   if (servo == 1) {
-    control = servoDirection * servoSpeed;
+    control = servoDirection * servoSpeed * (-1) ;
   } else if (servo == -1) {
-    control = servoDirection * servoSpeed * (-1);
+    control = servoDirection * servoSpeed;
   } else {
 	control = 0;
   }
   
   if (servoPosition + control > servoMin && servoPosition + control < servoMax) {
     servoPosition = servoPosition + control;
+  }
+  
+  if (servoPosition + control <= servoMin) {
+    servoPosition = servoMin;
+  }
+  
+  if (servoPosition + control >= servoMax) {
+    servoPosition = servoMax;
   }
   
   theServo.write(servoPosition);
