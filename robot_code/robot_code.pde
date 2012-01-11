@@ -8,9 +8,11 @@ Servo theServo;
 int servoPin = 4;
 int servoMin = 0;
 int servoMax = 360;
-int servoPosition = 0;
+int servoPosition = servoMin;
 int servoSpeed = 5;
 int servoDirection = -1;
+float servoJump = 0.2;
+float servoCurrentPosition = servoPosition;
 
 int inputDelay = 10;
 
@@ -139,9 +141,6 @@ void servo_control(int servo) {
   if (servoPosition + control >= servoMax) {
     servoPosition = servoMax;
   }
-  
-  theServo.write(servoPosition);
-    
 }
 
 int currently_reading = 0;
@@ -209,11 +208,24 @@ boolean readSerial() {
   
 }
 
+void servoUpdate()
+{
+  if (servoCurrentPosition < servoPosition) {
+    servoCurrentPosition = servoCurrentPosition + servoJump;
+  } else if (servoCurrentPosition > servoPosition) {
+    servoCurrentPosition = servoCurrentPosition - servoJump;
+  }
+  
+  theServo.write(int(servoCurrentPosition));
+}
+
 void loop()
 {  
   if (Serial.available()) {
     readSerial();
   }
+  
+  servoUpdate();
   
   delay(10);
 }
