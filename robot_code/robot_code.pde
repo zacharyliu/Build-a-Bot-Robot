@@ -9,8 +9,8 @@ int servoPin = 4;
 int servoMin = 0;
 int servoMax = 360;
 int servoPosition = 0;
-int servoSpeed = 2;
-int servoDirection = 1;
+int servoSpeed = 5;
+int servoDirection = -1;
 
 int inputDelay = 10;
 
